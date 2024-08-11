@@ -102,6 +102,8 @@ static void track_remainder(float *move, float *remainder) {
 static float update_movement_1d(const struct behavior_input_two_axis_config *config,
                                 struct movement_state_1d *state, int64_t now) {
     float move = 0;
+    state->remainder = 0;
+    
     if (state->speed == 0) {
         state->remainder = 0;
         return move;
