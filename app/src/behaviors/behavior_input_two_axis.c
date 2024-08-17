@@ -251,6 +251,9 @@ static int on_keymap_binding_released(struct zmk_behavior_binding *binding,
     int16_t y = MOVE_Y_DECODE(binding->param1);
 
     behavior_input_two_axis_adjust_speed(behavior_dev, -x, -y);
+     struct behavior_input_two_axis_data *data = dev->data;
+    data->state.x.speed = 0;
+    data->state.y.speed = 0;
     return 0;
 }
 
