@@ -102,7 +102,6 @@ static void track_remainder(float *move, float *remainder) {
 static float update_movement_1d(const struct behavior_input_two_axis_config *config,
                                 struct movement_state_1d *state, int64_t now) {
     float move = 0;
-    state->remainder = 0;
     
     if (state->speed == 0) {
         state->remainder = 0;
@@ -200,8 +199,17 @@ int behavior_input_two_axis_adjust_speed(const struct device *dev, int16_t dx, i
     struct behavior_input_two_axis_data *data = dev->data;
 
     LOG_DBG("Adjusting: %d %d", dx, dy);
-    data->state.x.speed += dx;
-    data->state.y.speed += dy;
+    if (data->state.x.speed + dx > INT16_MAX || data->state.x.speed + dx < INT16_MIN) {
+        data->state.x.speed = 0;
+    } else {
+        data->state.x.speed += dx;
+    }
+
+    if (data->state.y.speed + dy > INT16_MAX || data->state.y.speed + dy < INT16_MIN) {
+        data->state.y.speed = 0;
+    } else {
+        data->state.y.speed += dy;
+    }
 
     LOG_DBG("After: %d %d", data->state.x.speed, data->state.y.speed);
 
